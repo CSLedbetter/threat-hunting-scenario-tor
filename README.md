@@ -36,11 +36,12 @@ DeviceFileEvents
 | where DeviceName == "threat-hunt-lab"  
 | where InitiatingProcessAccountName == "employee"  
 | where FileName contains "tor"  
-| where Timestamp >= datetime(2024-11-08T22:14:48.6065231Z)  
+| where Timestamp >= datetime(2026-09-19T13:45:00.6065231Z)  
 | order by Timestamp desc  
 | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/71402e84-8767-44f8-908c-1805be31122d">
+
+<img width="1173" height="585" alt="image" src="https://github.com/user-attachments/assets/fc561259-b433-4af3-b7ff-361d724ba64e" />
 
 ---
 
