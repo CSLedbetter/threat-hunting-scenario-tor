@@ -55,7 +55,7 @@ Searched for any `ProcessCommandLine` that contained the string "tor-browser-win
 
 DeviceProcessEvents  
 | where DeviceName == "threat-hunt-lab"  
-| where ProcessCommandLine contains "tor-browser-windows-x86_64-portable-15.0.20.exe"  
+| where ProcessCommandLine contains "tor-browser-windows-x86_64-portable-14.0.10.exe"  
 | project Timestamp, DeviceName, AccountName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
 ```
 <img width="1322" height="164" alt="image" src="https://github.com/user-attachments/assets/8d890d34-e1ca-4630-9ca5-636ae7aa80e4" />
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### 3. Searched the `DeviceProcessEvents` Table for TOR Browser Execution
 
-Searched for any indication that user "employee" actually opened the TOR browser. There was evidence that they did open it at `2026-09-19T21:13:39.0656578Z`. There were several other instances of `firefox.exe` (TOR) as well as `tor.exe` spawned afterwards.
+Searched for any indication that user "employee" actually opened the TOR browser. There was evidence that they did open it at `2026-09-19T21:13:43.0656578Z`. There were several other instances of `firefox.exe` (TOR) as well as `tor.exe` spawned afterwards.
 
 **Query used to locate events:**
 
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### 4. Searched the `DeviceNetworkEvents` Table for TOR Network Connections
 
-Searched for any indication the TOR browser was used to establish a connection using any of the known TOR ports. At `2026-09-19T23:05:21.2407521Z`, an employee on the "threat-hunt-lab" device successfully established a connection to the remote IP address `212.51.155.254` on port `9001`. The connection was initiated by the process `tor.exe`, located in the folder `c:\users\employee\desktop\tor browser\browser\torbrowser\tor\tor.exe`. There were a couple of other connections to sites over port `443`.
+Searched for any indication the TOR browser was used to establish a connection using any of the known TOR ports. At `2026-09-19T23:05:21.2407521Z`, an employee on the "threat-hunt-lab" device successfully established a connection to the remote IP address `176.198.159.33` on port `9001`. The connection was initiated by the process `tor.exe`, located in the folder `c:\users\employee\desktop\tor browser\browser\torbrowser\tor\tor.exe`. There were a couple of other connections to sites over port `443`.
 
 **Query used to locate events:**
 
