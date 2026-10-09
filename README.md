@@ -27,7 +27,9 @@ Management suspects that some employees may be using TOR browsers to bypass netw
 
 ### 1. Searched the `DeviceFileEvents` Table
 
-Searched for any file that had the string "tor" in it and discovered what looks like the user "employee" downloaded a TOR installer, did something that resulted in many TOR-related files being copied to the desktop, and the creation of a file called `tor-shopping-list.txt` on the desktop at `2026-09-19T23:09:08.7550973Z`. These events began at `2026-09-19T20:46:17.4602005Z`.
+Searched for any file that had the string "tor-browser" in it and discovered that the user "employee" downloaded a TOR installer. The file `tor-browser-windows-x86_64-portable-15.0.20.exe` appeared in the Downloads folder at `2026-09-19T21:06:55Z` with the action type `FileRenamed`, which is how a completed browser download is logged.
+
+An earlier, broader search for the string "tor" also returned many TOR-related files copied to the desktop and a file called `tor-shopping-list.txt` created on the desktop at `2026-09-19T23:09:08.7550973Z`. That broader filter was dropped because it also matched unrelated file names such as "editor" and "storage".
 
 **Query used to locate events:**
 
@@ -35,13 +37,13 @@ Searched for any file that had the string "tor" in it and discovered what looks 
 DeviceFileEvents  
 | where DeviceName == "threat-hunt-lab"  
 | where InitiatingProcessAccountName == "employee"  
-| where FileName contains "tor"  
+| where FileName contains "tor-browser"  
 | where Timestamp >= datetime(2026-09-19T13:45:00.6065231Z)  
 | order by Timestamp desc  
 | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName
 ```
 
-<img width="1173" height="585" alt="image" src="https://github.com/user-attachments/assets/fc561259-b433-4af3-b7ff-361d724ba64e" />
+<img width="1173" alt="DeviceFileEvents result showing the TOR installer in the Downloads folder" src="images/step1-file-events.png" />
 
 ---
 
@@ -64,7 +66,7 @@ DeviceProcessEvents
 
 ### 3. Searched the `DeviceProcessEvents` Table for TOR Browser Execution
 
-Searched for any indication that user "employee" actually opened the TOR browser. There was evidence that they did open it at `2026-09-19T21:13:43.0656578Z`. There were several other instances of `firefox.exe` (TOR) as well as `tor.exe` spawned afterwards.
+Searched for any indication that user "employee" actually opened the TOR browser. There was evidence that they did: `tor.exe` and `firefox.exe` (TOR) processes were created at `2026-09-19T23:05:08Z`, and several more instances of `firefox.exe` were spawned afterwards.
 
 **Query used to locate events:**
 
@@ -75,7 +77,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine  
 | order by Timestamp desc
 ```
-<img width="1305" height="419" alt="image" src="https://github.com/user-attachments/assets/0e338d3b-170b-48c1-ad35-68a7ae1432f0" />
+<img width="1305" alt="DeviceProcessEvents result showing tor.exe and firefox.exe process creation" src="images/step3-process-events.png" />
 
 
 ---
@@ -104,9 +106,9 @@ DeviceNetworkEvents
 
 ### 1. File Download - TOR Installer
 
-- **Timestamp:** `2026-09-19T20:46:17.4602005Z`
+- **Timestamp:** `2026-09-19T21:06:55Z`
 - **Event:** The user "employee" downloaded a file named `tor-browser-windows-x86_64-portable-15.0.20.exe` to the Downloads folder.
-- **Action:** File download detected.
+- **Action:** File download detected (`FileRenamed`).
 - **File Path:** `C:\Users\employee\Downloads\tor-browser-windows-x86_64-portable-15.0.20.exe`
 
 ### 2. Process Execution - TOR Browser Installation
@@ -119,8 +121,8 @@ DeviceNetworkEvents
 
 ### 3. Process Execution - TOR Browser Launch
 
-- **Timestamp:** `2026-09-19T21:13:39.0656578Z`
-- **Event:** User "employee" opened the TOR browser. Subsequent processes associated with TOR browser, such as `firefox.exe` and `tor.exe`, were also created, indicating that the browser launched successfully.
+- **Timestamp:** `2026-09-19T23:05:08Z`
+- **Event:** User "employee" opened the TOR browser. Processes associated with TOR browser, `tor.exe` and `firefox.exe`, were created, indicating that the browser launched successfully.
 - **Action:** Process creation of TOR browser-related executables detected.
 - **File Path:** `C:\Users\employee\Desktop\Tor Browser\Browser\TorBrowser\Tor\tor.exe`
 
